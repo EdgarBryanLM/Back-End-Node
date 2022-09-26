@@ -45,8 +45,47 @@ const postMedicos= async(req,res=response)=>{
 
 }
 
-const updateMedicos=(req,res=response)=>{
+const updateMedicos=async (req,res=response)=>{
+    const id=req.params.id;
 
+    try {
+   
+        //Buscar medico en la base de datos
+        const medicoDB=Medico.findById(id);
+   
+        
+   
+        //Si no existe el hospital 
+        const campos=req.body;
+        if(!medicoDB){
+   
+            return res.status(404).json({
+            ok:false,
+            msg:"el hospital no existe"
+            });
+        }
+   
+   
+        //actualizar
+        const hospitalActualizado= await Medico.findByIdAndUpdate(id,campos,{new:true});
+   
+   
+        res.json({
+            ok:true,
+            id:id,
+            usuario:hospitalActualizado,
+            msg:"Medico actualizado"
+        });
+   
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg:'error interno'
+        });
+    }
+   
 
 
 }
